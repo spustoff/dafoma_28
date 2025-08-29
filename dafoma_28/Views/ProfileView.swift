@@ -256,37 +256,7 @@ struct ProfileView: View {
     
     private var menuItemsSection: some View {
         VStack(spacing: 12) {
-            MenuItemRow(
-                icon: "chart.line.uptrend.xyaxis",
-                title: "Learning Analytics",
-                subtitle: "View detailed progress reports"
-            ) {
-                // Handle analytics tap
-            }
-            
-            MenuItemRow(
-                icon: "person.3.fill",
-                title: "Invite Friends",
-                subtitle: "Share EduWise with friends"
-            ) {
-                // Handle invite tap
-            }
-            
-            MenuItemRow(
-                icon: "questionmark.circle",
-                title: "Help & Support",
-                subtitle: "Get help and contact support"
-            ) {
-                // Handle help tap
-            }
-            
-            MenuItemRow(
-                icon: "star.fill",
-                title: "Rate App",
-                subtitle: "Rate EduWise on the App Store"
-            ) {
-                // Handle rate tap
-            }
+
             
             MenuItemRow(
                 icon: "rectangle.portrait.and.arrow.right",
@@ -418,13 +388,7 @@ struct EditProfileView: View {
                             )
                             .neomorphismCard(cornerRadius: 50, shadowRadius: 8)
                         
-                        Button(action: {
-                            // Handle photo change
-                        }) {
-                            Text("Change Photo")
-                                .font(.subheadline)
-                                .foregroundColor(.accentOrange)
-                        }
+
                     }
                     .frame(maxWidth: .infinity)
                     
@@ -530,8 +494,6 @@ struct SettingsView: View {
                     
                     SettingsSection(title: "About") {
                         SettingsRow(title: "Version", value: "1.0.0")
-                        SettingsActionRow(title: "Privacy Policy")
-                        SettingsActionRow(title: "Terms of Service")
                     }
                 }
                 .padding(20)

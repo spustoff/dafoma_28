@@ -81,3 +81,4 @@ struct Badge: Identifiable, Codable {
         case language = "language"
     }
 }
+

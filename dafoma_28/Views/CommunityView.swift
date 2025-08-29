@@ -59,8 +59,18 @@ struct CommunityView: View {
             }
         }
         .onAppear {
+            // Load all community data when view appears
+            communityViewModel.loadChallenges()
+            communityViewModel.loadCommunityPosts()
+            
             if let userId = userViewModel.currentUser?.id {
                 communityViewModel.loadUserChallenges(userId: userId)
+            }
+        }
+        .onChange(of: selectedTab) { newTab in
+            // Load leaderboard data when leaderboard tab is selected
+            if newTab == 2 && !communityViewModel.challenges.isEmpty {
+                communityViewModel.loadLeaderboard(for: communityViewModel.challenges.first!.id)
             }
         }
     }
@@ -118,10 +128,31 @@ struct CommunityView: View {
     private var challengesTabView: some View {
         ScrollView {
             LazyVStack(spacing: 16) {
-                ForEach(communityViewModel.challenges) { challenge in
-                    ChallengeListCard(challenge: challenge) {
-                        selectedChallenge = challenge
-                        showChallengeDetail = true
+                if communityViewModel.challenges.isEmpty {
+                    VStack(spacing: 16) {
+                        Image(systemName: "trophy.circle")
+                            .font(.system(size: 60))
+                            .foregroundColor(.textSecondary)
+                        
+                        Text("No Challenges Available")
+                            .font(.title3)
+                            .fontWeight(.semibold)
+                            .foregroundColor(.textPrimary)
+                        
+                        Text("Check back later for new language learning challenges!")
+                            .font(.subheadline)
+                            .foregroundColor(.textSecondary)
+                            .multilineTextAlignment(.center)
+                    }
+                    .frame(maxWidth: .infinity, minHeight: 300)
+                    .padding()
+                    .neomorphismCard()
+                } else {
+                    ForEach(communityViewModel.challenges) { challenge in
+                        ChallengeListCard(challenge: challenge) {
+                            selectedChallenge = challenge
+                            showChallengeDetail = true
+                        }
                     }
                 }
             }
@@ -133,12 +164,47 @@ struct CommunityView: View {
     private var postsTabView: some View {
         ScrollView {
             LazyVStack(spacing: 16) {
-                ForEach(communityViewModel.communityPosts) { post in
-                    PostCard(post: post) {
-                        // Handle post tap
-                    } likeAction: {
-                        if let userId = userViewModel.currentUser?.id {
-                            communityViewModel.likePost(post, userId: userId)
+                if communityViewModel.communityPosts.isEmpty {
+                    VStack(spacing: 16) {
+                        Image(systemName: "bubble.left.and.bubble.right.circle")
+                            .font(.system(size: 60))
+                            .foregroundColor(.textSecondary)
+                        
+                        Text("No Posts Yet")
+                            .font(.title3)
+                            .fontWeight(.semibold)
+                            .foregroundColor(.textPrimary)
+                        
+                        Text("Be the first to share your learning journey with the community!")
+                            .font(.subheadline)
+                            .foregroundColor(.textSecondary)
+                            .multilineTextAlignment(.center)
+                        
+                        Button(action: {
+                            showCreatePost = true
+                        }) {
+                            Text("Create Post")
+                                .font(.subheadline)
+                                .fontWeight(.semibold)
+                                .foregroundColor(.textOnAccent)
+                                .padding(.horizontal, 24)
+                                .padding(.vertical, 12)
+                                .background(Color.accentOrange)
+                                .cornerRadius(20)
+                        }
+                        .buttonStyle(NeomorphismButtonStyle())
+                    }
+                    .frame(maxWidth: .infinity, minHeight: 300)
+                    .padding()
+                    .neomorphismCard()
+                } else {
+                    ForEach(communityViewModel.communityPosts) { post in
+                        PostCard(post: post) {
+                            // Handle post tap
+                        } likeAction: {
+                            if let userId = userViewModel.currentUser?.id {
+                                communityViewModel.likePost(post, userId: userId)
+                            }
                         }
                     }
                 }
@@ -152,12 +218,24 @@ struct CommunityView: View {
         ScrollView {
             VStack(spacing: 16) {
                 if communityViewModel.leaderboard.isEmpty {
-                    Text("No leaderboard data available")
-                        .font(.subheadline)
-                        .foregroundColor(.textSecondary)
-                        .frame(maxWidth: .infinity, alignment: .center)
-                        .padding()
-                        .neomorphismInset()
+                    VStack(spacing: 16) {
+                        Image(systemName: "chart.bar.fill")
+                            .font(.system(size: 60))
+                            .foregroundColor(.textSecondary)
+                        
+                        Text("No Leaderboard Data")
+                            .font(.title3)
+                            .fontWeight(.semibold)
+                            .foregroundColor(.textPrimary)
+                        
+                        Text("Complete challenges and lessons to appear on the leaderboard!")
+                            .font(.subheadline)
+                            .foregroundColor(.textSecondary)
+                            .multilineTextAlignment(.center)
+                    }
+                    .frame(maxWidth: .infinity, minHeight: 300)
+                    .padding()
+                    .neomorphismCard()
                 } else {
                     ForEach(communityViewModel.leaderboard) { entry in
                         LeaderboardRow(entry: entry)
@@ -626,3 +704,4 @@ struct ChallengeDetailView: View {
     CommunityView()
         .environmentObject(UserViewModel())
 }
+

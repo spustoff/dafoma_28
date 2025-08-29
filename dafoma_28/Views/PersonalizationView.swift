@@ -355,3 +355,4 @@ struct SkillCard: View {
 #Preview {
     PersonalizationView()
 }
+

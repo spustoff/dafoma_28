@@ -239,3 +239,4 @@ enum AttachmentType: String, CaseIterable, Codable {
     case video = "video"
     case link = "link"
 }
+

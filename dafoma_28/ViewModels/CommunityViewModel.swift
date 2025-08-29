@@ -200,3 +200,4 @@ class CommunityViewModel: ObservableObject {
             .store(in: &cancellables)
     }
 }
+

@@ -257,3 +257,4 @@ enum ExerciseType: String, CaseIterable, Codable {
     case speaking = "speaking"
     case listening = "listening"
 }
+
