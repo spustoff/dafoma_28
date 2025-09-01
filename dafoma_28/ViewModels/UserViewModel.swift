@@ -72,6 +72,12 @@ class UserViewModel: ObservableObject {
         UserDefaults.standard.removeObject(forKey: "current_user")
     }
     
+    func setCurrentUser(_ user: User) {
+        currentUser = user
+        isAuthenticated = true
+        saveUserToDefaults(user)
+    }
+    
     func updateProfile(name: String, selectedLanguages: [Language], learningGoals: [LearningGoal]) {
         guard var user = currentUser else { return }
         

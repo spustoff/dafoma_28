@@ -71,7 +71,7 @@ struct SignUpView: View {
                                     .fontWeight(.medium)
                                     .foregroundColor(.textPrimary)
                                 
-                                TextField("Enter your email", text: $email)
+                                TextField("email", text: $email)
                                     .textFieldStyle(NeomorphismTextFieldStyle())
                                     .keyboardType(.emailAddress)
                                     .autocapitalization(.none)
@@ -86,9 +86,9 @@ struct SignUpView: View {
                                 
                                 HStack {
                                     if isPasswordVisible {
-                                        TextField("Enter your password", text: $password)
+                                        TextField("password", text: $password)
                                     } else {
-                                        SecureField("Enter your password", text: $password)
+                                        SecureField("password", text: $password)
                                     }
                                     
                                     Button(action: {
@@ -110,9 +110,9 @@ struct SignUpView: View {
                                 
                                 HStack {
                                     if isConfirmPasswordVisible {
-                                        TextField("Confirm your password", text: $confirmPassword)
+                                        TextField("password", text: $confirmPassword)
                                     } else {
-                                        SecureField("Confirm your password", text: $confirmPassword)
+                                        SecureField("password", text: $confirmPassword)
                                     }
                                     
                                     Button(action: {

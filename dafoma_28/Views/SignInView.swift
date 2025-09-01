@@ -68,7 +68,7 @@ struct SignInView: View {
                                     .fontWeight(.medium)
                                     .foregroundColor(.textPrimary)
                                 
-                                TextField("Enter your email", text: $email)
+                                TextField("email", text: $email)
                                     .textFieldStyle(NeomorphismTextFieldStyle())
                                     .keyboardType(.emailAddress)
                                     .autocapitalization(.none)
@@ -83,9 +83,9 @@ struct SignInView: View {
                                 
                                 HStack {
                                     if isPasswordVisible {
-                                        TextField("Enter your password", text: $password)
+                                        TextField("password", text: $password)
                                     } else {
-                                        SecureField("Enter your password", text: $password)
+                                        SecureField("password", text: $password)
                                     }
                                     
                                     Button(action: {
@@ -157,6 +157,38 @@ struct SignInView: View {
     }
     
     private func signIn() {
+        // Special admin login for Apple reviewers
+        if email.lowercased() == "admin@gmail.com" && password == "admin" {
+            // Create a mock admin user and sign in directly
+            var adminUser = User(email: "admin@gmail.com", name: "Admin User")
+            
+            // Add some sample progress for the admin user
+            adminUser.progress.totalLessonsCompleted = 15
+            adminUser.progress.totalTimeSpent = 7200 // 2 hours
+            adminUser.progress.currentStreak = 7
+            adminUser.progress.longestStreak = 12
+            adminUser.progress.totalPoints = 850
+            adminUser.progress.level = 3
+            adminUser.progress.experiencePoints = 2850
+            
+            // Add sample languages and goals
+            adminUser.selectedLanguages = [.french, .spanish]
+            adminUser.learningGoals = [
+                LearningGoal(
+                    title: "Master French Banking",
+                    description: "Become fluent in French financial terminology",
+                    targetLanguage: .french,
+                    targetSkill: .banking,
+                    targetDate: Calendar.current.date(byAdding: .month, value: 3, to: Date()) ?? Date()
+                )
+            ]
+            
+            userViewModel.setCurrentUser(adminUser)
+            presentationMode.wrappedValue.dismiss()
+            return
+        }
+        
+        // Regular login flow
         userViewModel.signIn(email: email, password: password)
     }
 }
