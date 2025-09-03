@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct SignUpView: View {
-    @StateObject private var userViewModel = UserViewModel()
+    @EnvironmentObject var userViewModel: UserViewModel
     @State private var email = ""
     @State private var name = ""
     @State private var password = ""
@@ -181,13 +181,22 @@ struct SignUpView: View {
         }
         .sheet(isPresented: $showSignIn) {
             SignInView()
+                .environmentObject(userViewModel)
         }
         .fullScreenCover(isPresented: $showPersonalization) {
             PersonalizationView()
+                .environmentObject(userViewModel)
         }
         .onChange(of: userViewModel.isAuthenticated) { isAuthenticated in
             if isAuthenticated {
-                showPersonalization = true
+                // For admin login, skip personalization and go directly to main app
+                if userViewModel.currentUser?.email == "admin@gmail.com" {
+                    // The main app will handle navigation automatically
+                    return
+                } else {
+                    // For regular users, show personalization
+                    showPersonalization = true
+                }
             }
         }
     }
@@ -217,4 +226,5 @@ struct NeomorphismTextFieldStyle: TextFieldStyle {
 
 #Preview {
     SignUpView()
+        .environmentObject(UserViewModel())
 }

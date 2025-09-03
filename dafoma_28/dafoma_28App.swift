@@ -19,6 +19,7 @@ struct EduWiseMostApp: App {
                         .environmentObject(userViewModel)
                 } else {
                     OnboardingView()
+                        .environmentObject(userViewModel)
                 }
             }
             .onAppear {

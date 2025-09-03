@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct PersonalizationView: View {
-    @StateObject private var userViewModel = UserViewModel()
+    @EnvironmentObject var userViewModel: UserViewModel
     @State private var selectedLanguages: Set<Language> = []
     @State private var selectedSkills: Set<FinancialSkill> = []
     @State private var learningGoal = ""
@@ -114,6 +114,7 @@ struct PersonalizationView: View {
         }
         .fullScreenCover(isPresented: $showMainApp) {
             MainTabView()
+                .environmentObject(userViewModel)
         }
     }
     
@@ -354,5 +355,6 @@ struct SkillCard: View {
 
 #Preview {
     PersonalizationView()
+        .environmentObject(UserViewModel())
 }
 

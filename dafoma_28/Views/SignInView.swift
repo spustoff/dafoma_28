@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct SignInView: View {
-    @StateObject private var userViewModel = UserViewModel()
+    @EnvironmentObject var userViewModel: UserViewModel
     @State private var email = ""
     @State private var password = ""
     @State private var isPasswordVisible = false
@@ -184,7 +184,6 @@ struct SignInView: View {
             ]
             
             userViewModel.setCurrentUser(adminUser)
-            presentationMode.wrappedValue.dismiss()
             return
         }
         
@@ -195,4 +194,5 @@ struct SignInView: View {
 
 #Preview {
     SignInView()
+        .environmentObject(UserViewModel())
 }

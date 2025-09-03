@@ -8,8 +8,10 @@
 import SwiftUI
 
 struct OnboardingView: View {
+    @EnvironmentObject var userViewModel: UserViewModel
     @State private var currentPage = 0
     @State private var showSignUp = false
+    @State private var showSignIn = false
     
     let onboardingPages = [
         OnboardingPage(
@@ -68,19 +70,40 @@ struct OnboardingView: View {
                     // Bottom buttons
                     VStack(spacing: 16) {
                         if currentPage == onboardingPages.count - 1 {
-                            Button(action: {
-                                showSignUp = true
-                            }) {
-                                Text("Get Started")
-                                    .font(.headline)
-                                    .foregroundColor(.textOnAccent)
-                                    .frame(maxWidth: .infinity)
-                                    .padding()
-                                    .background(Color.accentOrange)
-                                    .cornerRadius(15)
+                            VStack(spacing: 16) {
+                                Button(action: {
+                                    showSignUp = true
+                                }) {
+                                    Text("Get Started")
+                                        .font(.headline)
+                                        .foregroundColor(.textOnAccent)
+                                        .frame(maxWidth: .infinity)
+                                        .padding()
+                                        .background(Color.accentOrange)
+                                        .cornerRadius(15)
+                                }
+                                .buttonStyle(NeomorphismButtonStyle())
+                                .padding(.horizontal, 40)
+                                
+                                Button(action: {
+                                    showSignIn = true
+                                }) {
+                                    Text("Already have an account? Sign In")
+                                        .font(.subheadline)
+                                        .fontWeight(.medium)
+                                        .foregroundColor(.textPrimary)
+                                        .frame(maxWidth: .infinity)
+                                        .padding()
+                                        .background(Color.neomorphLight)
+                                        .overlay(
+                                            RoundedRectangle(cornerRadius: 15)
+                                                .stroke(Color.accentOrange, lineWidth: 2)
+                                        )
+                                        .cornerRadius(15)
+                                }
+                                .buttonStyle(NeomorphismButtonStyle())
+                                .padding(.horizontal, 40)
                             }
-                            .buttonStyle(NeomorphismButtonStyle())
-                            .padding(.horizontal, 40)
                         } else {
                             Button(action: {
                                 withAnimation {
@@ -117,6 +140,19 @@ struct OnboardingView: View {
         }
         .fullScreenCover(isPresented: $showSignUp) {
             SignUpView()
+                .environmentObject(userViewModel)
+        }
+        .sheet(isPresented: $showSignIn) {
+            SignInView()
+                .environmentObject(userViewModel)
+        }
+        .onChange(of: userViewModel.isAuthenticated) { isAuthenticated in
+            if isAuthenticated {
+                // User successfully logged in, close any open sheets
+                showSignIn = false
+                showSignUp = false
+                // The main app will automatically navigate to MainTabView
+            }
         }
     }
 }
@@ -165,5 +201,6 @@ struct OnboardingPage {
 
 #Preview {
     OnboardingView()
+        .environmentObject(UserViewModel())
 }
 

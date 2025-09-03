@@ -73,9 +73,11 @@ class UserViewModel: ObservableObject {
     }
     
     func setCurrentUser(_ user: User) {
-        currentUser = user
-        isAuthenticated = true
-        saveUserToDefaults(user)
+        DispatchQueue.main.async {
+            self.currentUser = user
+            self.isAuthenticated = true
+            self.saveUserToDefaults(user)
+        }
     }
     
     func updateProfile(name: String, selectedLanguages: [Language], learningGoals: [LearningGoal]) {

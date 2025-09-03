@@ -535,134 +535,41 @@ struct LeaderboardRow: View {
 struct CreatePostView: View {
     @State private var content = ""
     @State private var selectedType: PostType = .discussion
-    @State private var selectedLanguage: Language?
-    @State private var selectedTopic: FinancialSkill?
     @Environment(\.presentationMode) var presentationMode
     
     var body: some View {
         NavigationView {
-            ScrollView {
-                VStack(alignment: .leading, spacing: 20) {
-                    // Post Type
-                    VStack(alignment: .leading, spacing: 8) {
-                        Text("Post Type")
-                            .font(.headline)
-                            .fontWeight(.semibold)
-                            .foregroundColor(.textPrimary)
-                        
-                        ScrollView(.horizontal, showsIndicators: false) {
-                            HStack(spacing: 12) {
-                                ForEach(PostType.allCases, id: \.self) { type in
-                                    Button(action: {
-                                        selectedType = type
-                                    }) {
-                                        HStack {
-                                            Image(systemName: type.icon)
-                                            Text(type.displayName)
-                                        }
-                                        .font(.subheadline)
-                                        .fontWeight(.medium)
-                                        .foregroundColor(selectedType == type ? .textOnAccent : .textPrimary)
-                                        .padding(.horizontal, 12)
-                                        .padding(.vertical, 8)
-                                        .background(selectedType == type ? Color.accentOrange : Color.neomorphLight)
-                                        .cornerRadius(12)
-                                    }
-                                    .buttonStyle(PlainButtonStyle())
-                                }
-                            }
-                            .padding(.horizontal, 4)
-                        }
-                    }
-                    
-                    // Content
-                    VStack(alignment: .leading, spacing: 8) {
-                        Text("Content")
-                            .font(.headline)
-                            .fontWeight(.semibold)
-                            .foregroundColor(.textPrimary)
-                        
-                        TextField("What's on your mind?", text: $content, axis: .vertical)
-                            .textFieldStyle(NeomorphismTextFieldStyle())
-                            .lineLimit(5...10)
-                    }
-                    
-                    // Optional Tags
-                    VStack(alignment: .leading, spacing: 16) {
-                        Text("Tags (Optional)")
-                            .font(.headline)
-                            .fontWeight(.semibold)
-                            .foregroundColor(.textPrimary)
-                        
-                        // Language Tag
-                        VStack(alignment: .leading, spacing: 8) {
-                            Text("Language")
-                                .font(.subheadline)
-                                .foregroundColor(.textSecondary)
-                            
-                            ScrollView(.horizontal, showsIndicators: false) {
-                                HStack(spacing: 8) {
-                                    ForEach(Language.allCases.prefix(6), id: \.self) { language in
-                                        Button(action: {
-                                            selectedLanguage = selectedLanguage == language ? nil : language
-                                        }) {
-                                            HStack {
-                                                Text(language.flag)
-                                                Text(language.displayName)
-                                            }
-                                            .font(.caption)
-                                            .padding(.horizontal, 8)
-                                            .padding(.vertical, 4)
-                                            .background(selectedLanguage == language ? Color.accentOrange.opacity(0.2) : Color.neomorphLight)
-                                            .cornerRadius(8)
-                                        }
-                                        .buttonStyle(PlainButtonStyle())
-                                    }
-                                }
-                                .padding(.horizontal, 4)
-                            }
-                        }
-                        
-                        // Topic Tag
-                        VStack(alignment: .leading, spacing: 8) {
-                            Text("Financial Topic")
-                                .font(.subheadline)
-                                .foregroundColor(.textSecondary)
-                            
-                            ScrollView(.horizontal, showsIndicators: false) {
-                                HStack(spacing: 8) {
-                                    ForEach(FinancialSkill.allCases.prefix(6), id: \.self) { skill in
-                                        Button(action: {
-                                            selectedTopic = selectedTopic == skill ? nil : skill
-                                        }) {
-                                            Text(skill.displayName)
-                                                .font(.caption)
-                                                .padding(.horizontal, 8)
-                                                .padding(.vertical, 4)
-                                                .background(selectedTopic == skill ? Color.primaryBlue.opacity(0.2) : Color.neomorphLight)
-                                                .cornerRadius(8)
-                                        }
-                                        .buttonStyle(PlainButtonStyle())
-                                    }
-                                }
-                                .padding(.horizontal, 4)
-                            }
-                        }
-                    }
+            VStack(alignment: .leading, spacing: 20) {
+                Text("Create Post")
+                    .font(.title2)
+                    .fontWeight(.bold)
+                    .foregroundColor(.textPrimary)
+                
+                TextField("What's on your mind?", text: $content)
+                    .textFieldStyle(NeomorphismTextFieldStyle())
+                
+                Spacer()
+                
+                Button(action: {
+                    createPost()
+                }) {
+                    Text("Post")
+                        .font(.headline)
+                        .foregroundColor(.textOnAccent)
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(content.isEmpty ? Color.gray : Color.accentOrange)
+                        .cornerRadius(15)
                 }
-                .padding(20)
+                .buttonStyle(NeomorphismButtonStyle())
+                .disabled(content.isEmpty)
             }
+            .padding(20)
             .background(Color.neomorphLight.ignoresSafeArea())
-            .navigationTitle("Create Post")
-            .navigationBarTitleDisplayMode(.inline)
             .navigationBarItems(
                 leading: Button("Cancel") {
                     presentationMode.wrappedValue.dismiss()
-                },
-                trailing: Button("Post") {
-                    createPost()
                 }
-                .disabled(content.isEmpty)
             )
         }
     }
